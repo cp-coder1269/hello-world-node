@@ -16,5 +16,9 @@ COPY . .
 # Expose the port set in the environment variable
 EXPOSE ${PORT}
 
-# Run the application
-CMD ["npm", "start"]
+# # Run the application
+# CMD ["npm", "start"]
+
+# Use the entrypoint script
+ENTRYPOINT ["/usr/src/app/src/docker/entrypoint.sh"]
+
