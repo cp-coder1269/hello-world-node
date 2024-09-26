@@ -13,6 +13,9 @@ RUN npm install
 # Bundle app source
 COPY . .
 
+# Make sure the entrypoint.sh is executable
+RUN chmod +x src/docker/entrypoint.sh
+
 # Expose the port set in the environment variable
 EXPOSE ${PORT}
 
