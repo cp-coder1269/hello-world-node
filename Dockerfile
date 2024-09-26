@@ -13,8 +13,8 @@ RUN npm install
 # Bundle app source
 COPY . .
 
-# Expose the port the app runs on
-EXPOSE 3000
+# Expose the port set in the environment variable
+EXPOSE ${PORT}
 
-# Run the app
-CMD ["node", "app.js"]
+# Run the application
+CMD ["npm", "start"]
