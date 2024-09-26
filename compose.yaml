@@ -1,9 +1,42 @@
-version: '3.8'
-
 services:
   hello-world:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
     ports:
-      - "3000:3000"
+      - "${PORT}:${PORT}"  # Map the port specified in the environment variable
+    environment:
+      - APP_NAME=${APP_NAME}
+      - PORT=${PORT}
+      - ENVIRONMENT=${ENVIRONMENT}
+      - CUSTOM_MESSAGE=${CUSTOM_MESSAGE}
+    env_file:
+      - ./src/server/.env
+    depends_on:
+      - check-env
+    command: >
+      sh -c "
+      if [ -z \"${APP_NAME}\" ] || [ -z \"${PORT}\" ] || [ -z \"${ENVIRONMENT}\" ] || [ -z \"${CUSTOM_MESSAGE}\" ]; 
+      then 
+        echo 'Missing one or more environment variables: APP_NAME, PORT, ENVIRONMENT, CUSTOM_MESSAGE';
+        exit 1;
+      else 
+        npm start; 
+      fi
+      "
+
+  check-env:
+    image: busybox
+    entrypoint: |
+      sh -c "
+      if [ -z \"${APP_NAME}\" ] || [ -z \"${PORT}\" ] || [ -z \"${ENVIRONMENT}\" ] || [ -z \"${CUSTOM_MESSAGE}\" ]; 
+      then 
+        echo 'Missing one or more environment variables. Please set them in the .env file or Coolify UI.'; 
+        exit 1;
+      else 
+        echo 'All required environment variables are set: APP_NAME=${APP_NAME}, PORT=${PORT}, ENVIRONMENT=${ENVIRONMENT}, CUSTOM_MESSAGE=${CUSTOM_MESSAGE}'; 
+      fi
+      "
+    environment:
+      - APP_NAME=${APP_NAME}
+      - PORT=${PORT}
+      - ENVIRONMENT=${ENVIRONMENT}
+      - CUSTOM_MESSAGE=${CUSTOM_MESSAGE}
